@@ -1,0 +1,17 @@
+{
+  "env": {
+    "MAX_THINKING_TOKENS": "32000"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(find:*)",
+      "Bash(dir /A:H \"C:\\Users\\NTV-Wands\\Documents\\GitHub\\server_monitor_tools\")",
+      "Bash(dir:*)",
+      "Bash(python:*)",
+      "Bash(del:*)",
+      "Bash(rm:*)"
+    ],
+    "deny": [],
+    "defaultMode": "acceptEdits"
+  }
+}

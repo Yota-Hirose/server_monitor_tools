@@ -1,0 +1,35 @@
+name: Update Excel from Web Form
+
+on:
+  repository_dispatch:
+    types: [update-monitoring-data]
+
+jobs:
+  update-excel:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+        
+    - name: Install dependencies
+      run: |
+        pip install openpyxl
+        
+    - name: Update Excel file
+      run: |
+        echo '${{ github.event.client_payload.data }}' > temp_data.json
+        python scripts/update_excel_template.py "$(cat temp_data.json)"
+        
+    - name: Commit and push changes
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add data/
+        git commit -m "監視データ更新: $(date +'%Y-%m-%d %H:%M:%S')" || exit 0
+        git push
