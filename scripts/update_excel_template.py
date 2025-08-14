@@ -366,93 +366,84 @@ def update_network_monitoring_excel(data):
         # 確認内容の項目は削除済み
         
         # FTサーバユーティリティ
-        # CPU/PCIモジュール (列6)
+        # CPU/PCIモジュール (P6)
         if data.get('networkCpuPciModule'):
-            safe_set_cell_value(ws, 6, 6, data.get('networkCpuPciModule'))
-            print(f"Updated CPU/PCIモジュール (F6): {data.get('networkCpuPciModule')}")
+            safe_set_cell_value(ws, 6, 16, data.get('networkCpuPciModule'))
+            print(f"Updated CPU/PCIモジュール (P6): {data.get('networkCpuPciModule')}")
         
-        # SCSIエンクロージャ (列6)
+        # SCSIエンクロージャ (P7)
         if data.get('networkScsiEnclosure'):
-            safe_set_cell_value(ws, 7, 6, data.get('networkScsiEnclosure'))
-            print(f"Updated SCSIエンクロージャ (F7): {data.get('networkScsiEnclosure')}")
+            safe_set_cell_value(ws, 7, 16, data.get('networkScsiEnclosure'))
+            print(f"Updated SCSIエンクロージャ (P7): {data.get('networkScsiEnclosure')}")
         
-        # サーバ時刻同期 (列10)
+        # サーバ時刻同期 (J9)
         if data.get('networkServerTimeSync'):
             safe_set_cell_value(ws, 9, 10, data.get('networkServerTimeSync'))
             print(f"Updated サーバ時刻同期 (J9): {data.get('networkServerTimeSync')}")
         
         # HDD残容量
-        # Cドライブ (列7)
+        # Cドライブ (G12)
         if data.get('networkDriveC'):
             safe_set_cell_value(ws, 12, 7, float(data.get('networkDriveC')))
             print(f"Updated C:ドライブ (G12): {data.get('networkDriveC')}GB")
         
-        # Fドライブ (列7)
+        # Eドライブ (Q12)
+        if data.get('networkDriveE'):
+            safe_set_cell_value(ws, 12, 17, float(data.get('networkDriveE')))
+            print(f"Updated E:ドライブ (Q12): {data.get('networkDriveE')}GB")
+        
+        # Fドライブ (G13)
         if data.get('networkDriveF'):
             safe_set_cell_value(ws, 13, 7, float(data.get('networkDriveF')))
             print(f"Updated F:ドライブ (G13): {data.get('networkDriveF')}GB")
         
-        # Eドライブ (列7) - 適切な行に配置
-        if data.get('networkDriveE'):
-            safe_set_cell_value(ws, 14, 7, float(data.get('networkDriveE')))
-            print(f"Updated E:ドライブ (G14): {data.get('networkDriveE')}GB")
-        
-        # Gドライブ (列7) - 適切な行に配置
+        # Gドライブ (Q13)
         if data.get('networkDriveG'):
-            safe_set_cell_value(ws, 15, 7, float(data.get('networkDriveG')))
-            print(f"Updated G:ドライブ (G15): {data.get('networkDriveG')}GB")
+            safe_set_cell_value(ws, 13, 17, float(data.get('networkDriveG')))
+            print(f"Updated G:ドライブ (Q13): {data.get('networkDriveG')}GB")
         
-        # タスクマネージャ - 詳細項目
-        # w3wp.exeの使用量 [MB] (列10)
+        # タスクマネージャ
+        # w3wp.exeの使用量 [MB] (U16)
         if data.get('networkW3wpUsage'):
-            safe_set_cell_value(ws, 16, 10, float(data.get('networkW3wpUsage')))
-            print(f"Updated w3wp.exeの使用量 (J16): {data.get('networkW3wpUsage')}MB")
+            safe_set_cell_value(ws, 16, 21, float(data.get('networkW3wpUsage')))
+            print(f"Updated w3wp.exeの使用量 (U16): {data.get('networkW3wpUsage')}MB")
         
-        # SQLServer [GB] (列10)
-        if data.get('networkSqlServerMemory'):
-            safe_set_cell_value(ws, 17, 10, float(data.get('networkSqlServerMemory')))
-            print(f"Updated SQLServer (J17): {data.get('networkSqlServerMemory')}GB")
-        
-        # MSSQL$KAISENTEST [GB] (列10)
-        if data.get('networkKaisentest'):
-            safe_set_cell_value(ws, 18, 10, float(data.get('networkKaisentest')))
-            print(f"Updated MSSQL$KAISENTEST (J18): {data.get('networkKaisentest')}GB")
-        
-        # 全体メモリ使用量 [GB] (列10)
+        # 全体メモリ使用量 [GB] (P20)
         if data.get('networkTotalMemoryUsage'):
-            safe_set_cell_value(ws, 20, 10, float(data.get('networkTotalMemoryUsage')))
-            print(f"Updated 全体メモリ使用量 (J20): {data.get('networkTotalMemoryUsage')}GB")
+            safe_set_cell_value(ws, 20, 16, float(data.get('networkTotalMemoryUsage')))
+            print(f"Updated 全体メモリ使用量 (P20): {data.get('networkTotalMemoryUsage')}GB")
         
-        # CPU使用率 [%] (列6)
+        # CPU使用率 [%] (N21)
         if data.get('networkCpuUsage'):
-            safe_set_cell_value(ws, 21, 6, float(data.get('networkCpuUsage')))
-            print(f"Updated CPU使用率 (F21): {data.get('networkCpuUsage')}%")
+            safe_set_cell_value(ws, 21, 14, float(data.get('networkCpuUsage')))
+            print(f"Updated CPU使用率 (N21): {data.get('networkCpuUsage')}%")
         
-        # CPU確認時刻 (列16)
+        # CPU確認時刻 (P21)
         if data.get('networkCpuCheckTime'):
             safe_set_cell_value(ws, 21, 16, data.get('networkCpuCheckTime'))
             print(f"Updated CPU確認時刻 (P21): {data.get('networkCpuCheckTime')}")
         
-        # MSSQL$KAISENMONITOR (列10)
+        # SQLServer詳細
+        # MSSQL$KAISENMONITOR [GB] (U18)
         if data.get('networkKaisenmonitor'):
-            safe_set_cell_value(ws, 22, 10, data.get('networkKaisenmonitor'))
-            print(f"Updated MSSQL$KAISENMONITOR (J22): {data.get('networkKaisenmonitor')}")
+            safe_set_cell_value(ws, 18, 21, float(data.get('networkKaisenmonitor')))
+            print(f"Updated MSSQL$KAISENMONITOR (U18): {data.get('networkKaisenmonitor')}GB")
         
-        # メモリ使用量：w3 (列10)
-        if data.get('networkW3MemoryUsage'):
-            safe_set_cell_value(ws, 23, 10, data.get('networkW3MemoryUsage'))
-            print(f"Updated メモリ使用量：w3 (J23): {data.get('networkW3MemoryUsage')}")
+        # MSSQL$KAISENTEST [GB] (U19)
+        if data.get('networkKaisentest'):
+            safe_set_cell_value(ws, 19, 21, float(data.get('networkKaisentest')))
+            print(f"Updated MSSQL$KAISENTEST (U19): {data.get('networkKaisentest')}GB")
         
         # FTサーバの全面ランプ
-        # 上段サーバランプ点灯数 (列6)
+        # 上段サーバランプ点灯数 (M24)
         if data.get('networkUpperLamps'):
-            safe_set_cell_value(ws, 24, 6, int(data.get('networkUpperLamps')))
-            print(f"Updated 上段サーバランプ (F24): {data.get('networkUpperLamps')}個")
+            safe_set_cell_value(ws, 24, 13, int(data.get('networkUpperLamps')))
+            print(f"Updated 上段サーバランプ (M24): {data.get('networkUpperLamps')}個")
         
-        # 下段サーバランプ点灯数 (列6)
+        # 下段サーバランプ点灯数 (M25)
         if data.get('networkLowerLamps'):
-            safe_set_cell_value(ws, 25, 6, int(data.get('networkLowerLamps')))
-            print(f"Updated 下段サーバランプ (F25): {data.get('networkLowerLamps')}個")
+            safe_set_cell_value(ws, 25, 13, int(data.get('networkLowerLamps')))
+            print(f"Updated 下段サーバランプ (M25): {data.get('networkLowerLamps')}個")
         
         # 備考
         if data.get('networkNotes'):

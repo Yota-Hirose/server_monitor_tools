@@ -529,18 +529,10 @@
             
             <!-- タスクマネージャ -->
             <h2>タスクマネージャ</h2>
-            <div class="grid grid-3">
+            <div class="grid grid-2">
                 <div class="form-group">
                     <label for="networkW3wpUsage">w3wp.exeの使用量 [MB]</label>
                     <input type="number" id="networkW3wpUsage" name="networkW3wpUsage" step="0.1" placeholder="539.6">
-                </div>
-                <div class="form-group">
-                    <label for="networkSqlServerMemory">SQLServer [GB]</label>
-                    <input type="number" id="networkSqlServerMemory" name="networkSqlServerMemory" step="0.01" placeholder="3.90">
-                </div>
-                <div class="form-group">
-                    <label for="networkKaisentest">MSSQL$KAISENTEST [GB]</label>
-                    <input type="number" id="networkKaisentest" name="networkKaisentest" step="0.01" placeholder="0.18">
                 </div>
                 <div class="form-group">
                     <label for="networkTotalMemoryUsage">全体メモリ使用量 [GB]</label>
@@ -554,13 +546,18 @@
                     <label for="networkCpuCheckTime">CPU確認時刻</label>
                     <input type="time" id="networkCpuCheckTime" name="networkCpuCheckTime" placeholder="14:35">
                 </div>
+            </div>
+            
+            <!-- SQLServer詳細 -->
+            <h2>🗄️ SQLServer詳細</h2>
+            <div class="grid grid-2">
                 <div class="form-group">
-                    <label for="networkKaisenmonitor">MSSQL$KAISENMONITOR</label>
-                    <input type="text" id="networkKaisenmonitor" name="networkKaisenmonitor" placeholder="状況を入力">
+                    <label for="networkKaisenmonitor">📊 MSSQL$KAISENMONITOR [GB]</label>
+                    <input type="number" id="networkKaisenmonitor" name="networkKaisenmonitor" step="0.01" placeholder="3.90">
                 </div>
                 <div class="form-group">
-                    <label for="networkW3MemoryUsage">メモリ使用量：w3</label>
-                    <input type="text" id="networkW3MemoryUsage" name="networkW3MemoryUsage" placeholder="w3の詳細情報">
+                    <label for="networkKaisentest">🧪 MSSQL$KAISENTEST [GB]</label>
+                    <input type="number" id="networkKaisentest" name="networkKaisentest" step="0.01" placeholder="0.18">
                 </div>
             </div>
             
@@ -1286,8 +1283,8 @@
             const csvHeaders = [
                 '確認日', '確認者', '確認結果', 'CPUモジュール', 'SCSIエンクロージャ', 'サーバ時刻同期',
                 'C:ドライブ[GB]', 'F:ドライブ[GB]', 'E:ドライブ[GB]', 'G:ドライブ[GB]',
-                'w3wp.exe使用量[MB]', 'SQLServer[GB]', 'MSSQL$KAISENTEST[GB]', '全体メモリ使用量[GB]',
-                'CPU使用率[%]', 'CPU確認時刻', 'MSSQL$KAISENMONITOR', 'メモリ使用量:w3',
+                'w3wp.exe使用量[MB]', '全体メモリ使用量[GB]', 'CPU使用率[%]', 'CPU確認時刻',
+                'MSSQL$KAISENMONITOR[GB]', 'MSSQL$KAISENTEST[GB]',
                 '上段ランプ[個]', '下段ランプ[個]', '備考'
             ];
             
@@ -1304,13 +1301,11 @@
                 data.networkDriveE || '',
                 data.networkDriveG || '',
                 data.networkW3wpUsage || '',
-                data.networkSqlServerMemory || '',
-                data.networkKaisentest || '',
                 data.networkTotalMemoryUsage || '',
                 data.networkCpuUsage || '',
                 data.networkCpuCheckTime || '',
                 data.networkKaisenmonitor || '',
-                data.networkW3MemoryUsage || '',
+                data.networkKaisentest || '',
                 data.networkUpperLamps || '',
                 data.networkLowerLamps || '',
                 data.networkNotes || ''
