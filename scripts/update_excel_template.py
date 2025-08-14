@@ -34,8 +34,8 @@ def update_excel_template(json_data):
     # JSONデータをパース
     data = json.loads(json_data)
     
-    # Excelファイルのパス
-    excel_path = '../data/スポーツコーダ監視作業履歴.xlsx'
+    # Excelファイルのパス（GitHub Actions用）
+    excel_path = 'data/スポーツコーダ監視作業履歴.xlsx'
     
     if not os.path.exists(excel_path):
         print(f"Error: Excel file not found: {excel_path}")
