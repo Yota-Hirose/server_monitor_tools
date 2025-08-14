@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>スポーツコーダー監視作業記録</title>
+    <title>HW監視作業フォーム</title>
     <style>
         * {
             box-sizing: border-box;
@@ -98,6 +98,32 @@
             gap: 8px;
             align-items: center;
             margin-bottom: 12px;
+        }
+        
+        .sc-section {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+            background-color: #fafafa;
+        }
+        
+        .sc-section h3 {
+            margin: 0 0 12px 0;
+            color: #333;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        .sc-subsection {
+            margin-bottom: 12px;
+        }
+        
+        .sc-subsection-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: #666;
+            margin-bottom: 8px;
         }
         
         .sc-label {
@@ -290,7 +316,7 @@
     </div>
     
     <div class="container">
-        <h1>スポーツコーダー HW監視作業記録</h1>
+        <h1>HW監視作業フォーム</h1>
         
         <div id="alert" class="alert"></div>
         
@@ -298,8 +324,7 @@
         <div class="tabs">
             <button class="tab active" onclick="switchTab('monitoring')">📋 スポーツコーダー監視</button>
             <button class="tab" onclick="switchTab('network')">🌐 回線モニタシステム</button>
-            <button class="tab" onclick="switchTab('github')">📤 GitHub送信</button>
-            <button class="tab" onclick="switchTab('local')">💾 ローカル保存</button>
+            <button class="tab" onclick="switchTab('github')">⚙️ GitHub設定</button>
         </div>
         
         <!-- 監視記録入力タブ -->
@@ -420,16 +445,9 @@
                 </div>
             </div>
             
-            <!-- SC機 -->
-            <h2>SC機 HDD残容量 [GB]</h2>
-            <div id="scMachines">
+            <!-- SC機セクション -->
+            <div id="scSections">
                 <!-- SC-1 から SC-12 まで動的に生成 -->
-            </div>
-            
-            <!-- SC機 CPU[%]/メモリ[GB] -->
-            <h2>SC機 CPU[%]/メモリ[GB]</h2>
-            <div id="scCpuMemory">
-                <!-- SC-1 から SC-12 のCPU/メモリ情報を動的に生成 -->
             </div>
             
             <!-- 備考 -->
@@ -438,18 +456,21 @@
                 <textarea id="notes" name="notes" rows="3" placeholder="特記事項があれば入力してください"></textarea>
             </div>
             
-                <!-- データ管理ボタン -->
-                <div class="button-group">
-                    <button type="button" class="btn-secondary" onclick="saveToLocal()">
-                        📥 GitHub保存
-                    </button>
-                    <button type="button" class="btn-secondary" onclick="loadPreviousData()">
-                        📂 前回データ読込
-                    </button>
-                    <button type="button" class="btn-secondary" onclick="clearSportsCoderForm()">
-                        🗑️ フォームクリア
-                    </button>
-                </div>
+            <!-- データ管理・送信ボタン -->
+            <div class="button-group">
+                <button type="button" class="btn-secondary" onclick="saveToLocal()">
+                    📥 GitHub保存
+                </button>
+                <button type="button" class="btn-secondary" onclick="loadPreviousData()">
+                    📂 前回データ読込
+                </button>
+                <button type="button" class="btn-secondary" onclick="clearSportsCoderForm()">
+                    🗑️ フォームクリア
+                </button>
+                <button type="button" class="btn-primary" onclick="submitSportsCoderForm()">
+                    📤 GitHubに送信
+                </button>
+            </div>
             </form>
         </div>
         
@@ -591,28 +612,19 @@
                     <button type="button" class="btn-secondary" onclick="clearNetworkForm()">
                         🗑️ フォームクリア
                     </button>
+                    <button type="button" class="btn-primary" onclick="submitNetworkForm()">
+                        📤 GitHubに送信
+                    </button>
                 </div>
             </form>
         </div>
         
-        <!-- GitHub送信タブ -->
+        <!-- GitHub設定タブ -->
         <div id="github-tab" class="tab-content">
             <div class="config-section">
-                <h2>送信するデータを選択</h2>
-                <div class="form-group">
-                    <label>
-                        <input type="radio" name="dataType" value="sports" checked> 📋 スポーツコーダー監視データ
-                    </label>
-                </div>
-                <div class="form-group">
-                    <label>
-                        <input type="radio" name="dataType" value="network"> 🌐 回線モニタシステムデータ
-                    </label>
-                </div>
-            </div>
-            
-            <div class="config-section">
-                <h2>GitHub設定</h2>
+                <h2>⚙️ GitHub設定</h2>
+                <p class="config-info">GitHub連携に必要な設定を行います。一度設定すれば自動保存されます。</p>
+                
                 <div class="form-group">
                     <label for="githubToken">GitHub Personal Access Token</label>
                     <input type="password" id="githubToken" placeholder="ghp_xxxxxxxxxxxxxx">
@@ -632,53 +644,17 @@
                     </div>
                 </div>
                 
-                <div class="button-group">
-                    <button type="button" class="btn-primary" onclick="submitToGitHub()">
-                        📤 GitHubに送信
-                    </button>
-                </div>
-            </div>
-        </div>
-        
-        <!-- ローカル保存タブ -->
-        <div id="local-tab" class="tab-content">
-            <div class="config-section">
-                <h2>スポーツコーダー監視データ</h2>
-                <p class="config-info">スポーツコーダー監視データをローカルファイルとして保存できます。</p>
-                
-                <div class="button-group">
-                    <button type="button" class="btn-excel" onclick="downloadJSON()">
-                        📁 JSONで保存
-                    </button>
-                    <button type="button" class="btn-csv" onclick="downloadCSV()">
-                        📊 CSVで保存
-                    </button>
-                </div>
-            </div>
-            
-            <div class="config-section">
-                <h2>回線モニタシステムデータ</h2>
-                <p class="config-info">回線モニタシステムデータをローカルファイルとして保存できます。</p>
-                
-                <div class="button-group">
-                    <button type="button" class="btn-excel" onclick="downloadNetworkJSON()">
-                        📁 JSONで保存
-                    </button>
-                    <button type="button" class="btn-csv" onclick="downloadNetworkCSV()">
-                        📊 CSVで保存
-                    </button>
-                </div>
-            </div>
-                
                 <div class="config-info" style="margin-top: 20px;">
-                    <h3>使用方法:</h3>
+                    <h3>📋 使用方法:</h3>
                     <ul>
-                        <li><strong>JSONで保存:</strong> ダウンロードしたJSONファイルをPythonスクリプトでExcelに変換</li>
-                        <li><strong>CSVで保存:</strong> Excelで直接開いて確認可能</li>
+                        <li><strong>📥 GitHub保存:</strong> データのみを保存（Excel更新なし）</li>
+                        <li><strong>📤 GitHubに送信:</strong> Excelファイル更新 + データ保存</li>
+                        <li><strong>📂 前回データ読込:</strong> 保存されたデータを読み込み</li>
                     </ul>
                 </div>
             </div>
         </div>
+        
     </div>
     
     <script>
@@ -695,11 +671,8 @@
             // 保存された設定を読み込む
             loadConfig();
             
-            // SC機の入力フィールドを生成
-            generateSCInputs();
-            
-            // SC機CPU/メモリの入力フィールドを生成
-            generateSCCpuMemoryInputs();
+            // SC機セクションを生成
+            generateSCSections();
             
             // 回線モニタシステム用の日時設定
             document.getElementById('networkDate').value = `${year}/${month}/${day}`;
@@ -708,34 +681,48 @@
             // ページロード時は自動読み込みしない（ユーザーが明示的に読み込むように変更）
         });
         
-        // SC機の入力フィールドを動的に生成
-        function generateSCInputs() {
-            const container = document.getElementById('scMachines');
+        // SC機セクションを動的に生成（HDD + CPU/メモリを統合）
+        function generateSCSections() {
+            const container = document.getElementById('scSections');
             for (let i = 1; i <= 12; i++) {
-                const div = document.createElement('div');
-                div.className = 'sc-inputs';
-                div.innerHTML = `
-                    <span class="sc-label">SC-${i}:</span>
-                    <input type="number" name="sc${i}_c" placeholder="C:" step="0.1">
-                    <input type="number" name="sc${i}_d" placeholder="D:" step="0.1">
-                    <input type="number" name="sc${i}_h" placeholder="H:" step="0.1">
+                const section = document.createElement('div');
+                section.className = 'sc-section';
+                section.innerHTML = `
+                    <h3>🖥️ SC-${i}</h3>
+                    
+                    <div class="sc-subsection">
+                        <div class="sc-subsection-title">💾 HDD残容量 [GB]</div>
+                        <div class="grid grid-3">
+                            <div class="form-group">
+                                <label>C:</label>
+                                <input type="number" name="sc${i}_c" placeholder="269" step="0.1">
+                            </div>
+                            <div class="form-group">
+                                <label>D:</label>
+                                <input type="number" name="sc${i}_d" placeholder="195" step="0.1">
+                            </div>
+                            <div class="form-group">
+                                <label>H:</label>
+                                <input type="number" name="sc${i}_h" placeholder="953" step="0.1">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="sc-subsection">
+                        <div class="sc-subsection-title">⚡ CPU・メモリ</div>
+                        <div class="grid grid-2">
+                            <div class="form-group">
+                                <label>CPU使用率 [%]</label>
+                                <input type="number" name="sc${i}_cpu" placeholder="5.2" min="0" max="100" step="0.1">
+                            </div>
+                            <div class="form-group">
+                                <label>メモリ使用量 [GB]</label>
+                                <input type="number" name="sc${i}_memory" placeholder="2.1" step="0.01">
+                            </div>
+                        </div>
+                    </div>
                 `;
-                container.appendChild(div);
-            }
-        }
-        
-        // SC機CPU/メモリの入力フィールドを動的に生成
-        function generateSCCpuMemoryInputs() {
-            const container = document.getElementById('scCpuMemory');
-            for (let i = 1; i <= 12; i++) {
-                const div = document.createElement('div');
-                div.className = 'sc-cpu-inputs';
-                div.innerHTML = `
-                    <span class="sc-label">SC-${i}:</span>
-                    <input type="number" name="sc${i}_cpu" placeholder="CPU[%]" min="0" max="100" step="0.1">
-                    <input type="number" name="sc${i}_memory" placeholder="メモリ[GB]" step="0.01">
-                `;
-                container.appendChild(div);
+                container.appendChild(section);
             }
         }
         
@@ -974,108 +961,6 @@
             }
         }
         
-        // ファイルダウンロード機能
-        function downloadFile(content, filename, contentType) {
-            const blob = new Blob([content], { type: contentType });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
-        }
-        
-        // JSONファイルとしてダウンロード
-        function downloadJSON() {
-            const formData = new FormData(document.getElementById('monitoringForm'));
-            const data = Object.fromEntries(formData.entries());
-            
-            // 必須項目チェック
-            if (!data.date || !data.time || !data.checker) {
-                showAlert('基本情報（確認日、確認時刻、確認者）を入力してください', 'error');
-                return;
-            }
-            
-            const jsonContent = JSON.stringify(data, null, 2);
-            const filename = `monitoring_${data.date}_${data.time.replace(':', '')}.json`;
-            
-            downloadFile(jsonContent, filename, 'application/json');
-            showAlert('JSONファイルをダウンロードしました。Pythonスクリプトで変換してください', 'success');
-        }
-        
-        // CSVファイルとしてダウンロード
-        function downloadCSV() {
-            const formData = new FormData(document.getElementById('monitoringForm'));
-            const data = Object.fromEntries(formData.entries());
-            
-            // 必須項目チェック
-            if (!data.date || !data.time || !data.checker) {
-                showAlert('基本情報（確認日、確認時刻、確認者）を入力してください', 'error');
-                return;
-            }
-            
-            // CSVヘッダー
-            const csvHeaders = [
-                '確認日', '確認者', '確認結果', 'サーバ時刻同期', 'CPUモジュール', 'SCSIエンクロージャ',
-                'C:ドライブ[GB]', 'D:ドライブ[GB]', 'E:ドライブ[GB]', 'Y:ドライブ[GB]', 'Z:ドライブ[TB]',
-                'SQLServerメモリ[GB]', '全体メモリ[GB]', 'メモリ使用量状況', 'CPU使用率[%]', 'CPU確認時刻',
-                '上段ランプ[個]', '下段ランプ[個]', '備考'
-            ];
-            
-            // CSVデータ行
-            const csvRow = [
-                data.date || '',  // 日付のみ（時刻は除去）
-                data.checker || '',
-                data.checkResult || '',
-                data.serverTimeSync || '',
-                data.cpuPciModule || '',
-                data.scsiEnclosure || '',
-                data.driveC || '',
-                data.driveD || '',
-                data.driveE || '',
-                data.driveY || '',
-                data.driveZ || '',
-                data.sqlServerMemory || '',
-                data.totalMemory || '',
-                data.memoryUsageStatus || '',
-                data.cpuUsage || '',
-                data.cpuUsageTime || '',
-                data.upperLamps || '',
-                data.lowerLamps || '',
-                data.notes || ''
-            ];
-            
-            // SC機HDDデータを追加
-            for (let i = 1; i <= 12; i++) {
-                csvHeaders.push(`SC-${i}_C:[GB]`, `SC-${i}_D:[GB]`, `SC-${i}_H:[GB]`);
-                csvRow.push(
-                    data[`sc${i}_c`] || '',
-                    data[`sc${i}_d`] || '',
-                    data[`sc${i}_h`] || ''
-                );
-            }
-            
-            // SC機CPU/メモリデータを追加
-            for (let i = 1; i <= 12; i++) {
-                csvHeaders.push(`SC-${i}_CPU:[%]`, `SC-${i}_Memory:[GB]`);
-                csvRow.push(
-                    data[`sc${i}_cpu`] || '',
-                    data[`sc${i}_memory`] || ''
-                );
-            }
-            
-            // CSV形式に変換
-            const csvContent = [
-                csvHeaders.join(','),
-                csvRow.map(field => `"${field}"`).join(',')
-            ].join('\n');
-            
-            const filename = `monitoring_${data.date}_${data.time.replace(':', '')}.csv`;
-            downloadFile('\uFEFF' + csvContent, filename, 'text/csv;charset=utf-8');
-            showAlert('CSVファイルをダウンロードしました', 'success');
-        }
         
         // アラート表示
         function showAlert(message, type = 'info') {
@@ -1108,7 +993,66 @@
             await saveDataToGitHub(data, 'sports', 'スポーツコーダーデータを保存しました');
         }
         
-        // 旧コード削除: ローカルストレージは使用しなくなりました
+        // スポーツコーダーフォーム直接送信
+        async function submitSportsCoderForm() {
+            // 設定を保存
+            saveConfig();
+            
+            // GitHub設定の確認
+            const token = document.getElementById('githubToken').value;
+            const owner = document.getElementById('repoOwner').value;
+            const repo = document.getElementById('repoName').value;
+            
+            if (!token || !owner || !repo) {
+                showAlert('GitHub設定を入力してください。「📤 GitHub送信」タブで設定を確認してください。', 'error');
+                return;
+            }
+            
+            // フォームデータを収集
+            const formData = new FormData(document.getElementById('monitoringForm'));
+            const data = Object.fromEntries(formData.entries());
+            
+            // 必須項目チェック
+            if (!data.date || !data.time || !data.checker) {
+                showAlert('スポーツコーダーの基本情報（確認日、確認時刻、確認者）を入力してください', 'error');
+                return;
+            }
+            
+            showLoading(true);
+            
+            try {
+                // GitHub APIでワークフローをトリガー（repository_dispatch）
+                const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/dispatches`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        event_type: 'update-monitoring-data',
+                        client_payload: {
+                            data: JSON.stringify(data)
+                        }
+                    })
+                });
+                
+                if (response.ok) {
+                    showAlert('スポーツコーダーデータを送信しました！GitHub Actionsで処理中です。', 'success');
+                    
+                    // 送信成功時に自動でデータも保存
+                    await saveDataToGitHub(data, 'sports', '');
+                } else {
+                    const error = await response.text();
+                    throw new Error(`送信失敗: ${response.status} - ${error}`);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert(`エラーが発生しました: ${error.message}`, 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
         
         // 前回データ読み込み（ユーザー操作用）
         async function loadPreviousData() {
@@ -1217,77 +1161,67 @@
             showAlert('回線モニタフォームをクリアしました', 'success');
         }
         
-        // 回線モニタ用: JSONファイルとしてダウンロード
-        function downloadNetworkJSON() {
+        // 回線モニタフォーム直接送信
+        async function submitNetworkForm() {
+            // 設定を保存
+            saveConfig();
+            
+            // GitHub設定の確認
+            const token = document.getElementById('githubToken').value;
+            const owner = document.getElementById('repoOwner').value;
+            const repo = document.getElementById('repoName').value;
+            
+            if (!token || !owner || !repo) {
+                showAlert('GitHub設定を入力してください。「⚙️ GitHub設定」タブで設定を確認してください。', 'error');
+                return;
+            }
+            
+            // フォームデータを収集
             const formData = new FormData(document.getElementById('networkForm'));
             const data = Object.fromEntries(formData.entries());
             
             // 必須項目チェック
             if (!data.networkDate || !data.networkTime || !data.networkChecker) {
-                showAlert('基本情報（確認日、確認時刻、確認者）を入力してください', 'error');
+                showAlert('回線モニタの基本情報（確認日、確認時刻、確認者）を入力してください', 'error');
                 return;
             }
             
-            const jsonContent = JSON.stringify(data, null, 2);
-            const filename = `network_monitoring_${data.networkDate}_${data.networkTime.replace(':', '')}.json`;
+            showLoading(true);
             
-            downloadFile(jsonContent, filename, 'application/json');
-            showAlert('回線モニタJSONファイルをダウンロードしました', 'success');
+            try {
+                // GitHub APIでワークフローをトリガー（repository_dispatch）
+                const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/dispatches`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        event_type: 'update-monitoring-data',
+                        client_payload: {
+                            data: JSON.stringify(data)
+                        }
+                    })
+                });
+                
+                if (response.ok) {
+                    showAlert('回線モニタデータを送信しました！GitHub Actionsで処理中です。', 'success');
+                    
+                    // 送信成功時に自動でデータも保存
+                    await saveDataToGitHub(data, 'network', '');
+                } else {
+                    const error = await response.text();
+                    throw new Error(`送信失敗: ${response.status} - ${error}`);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert(`エラーが発生しました: ${error.message}`, 'error');
+            } finally {
+                showLoading(false);
+            }
         }
         
-        // 回線モニタ用: CSVファイルとしてダウンロード
-        function downloadNetworkCSV() {
-            const formData = new FormData(document.getElementById('networkForm'));
-            const data = Object.fromEntries(formData.entries());
-            
-            // 必須項目チェック
-            if (!data.networkDate || !data.networkTime || !data.networkChecker) {
-                showAlert('基本情報（確認日、確認時刻、確認者）を入力してください', 'error');
-                return;
-            }
-            
-            // CSVヘッダー
-            const csvHeaders = [
-                '確認日', '確認者', '確認結果', 'CPUモジュール', 'SCSIエンクロージャ', 'サーバ時刻同期',
-                'C:ドライブ[GB]', 'F:ドライブ[GB]', 'E:ドライブ[GB]', 'G:ドライブ[GB]',
-                'w3wp.exe使用量[MB]', '全体メモリ使用量[GB]', 'CPU使用率[%]', 'CPU確認時刻',
-                'MSSQL$KAISENMONITOR[GB]', 'MSSQL$KAISENTEST[GB]',
-                '上段ランプ[個]', '下段ランプ[個]', '備考'
-            ];
-            
-            // CSVデータ行
-            const csvRow = [
-                data.networkDate || '',
-                data.networkChecker || '',
-                data.networkCheckResult || '',
-                data.networkCpuPciModule || '',
-                data.networkScsiEnclosure || '',
-                data.networkServerTimeSync || '',
-                data.networkDriveC || '',
-                data.networkDriveF || '',
-                data.networkDriveE || '',
-                data.networkDriveG || '',
-                data.networkW3wpUsage || '',
-                data.networkTotalMemoryUsage || '',
-                data.networkCpuUsage || '',
-                data.networkCpuCheckTime || '',
-                data.networkKaisenmonitor || '',
-                data.networkKaisentest || '',
-                data.networkUpperLamps || '',
-                data.networkLowerLamps || '',
-                data.networkNotes || ''
-            ];
-            
-            // CSV形式に変換
-            const csvContent = [
-                csvHeaders.join(','),
-                csvRow.map(field => `"${field}"`).join(',')
-            ].join('\n');
-            
-            const filename = `network_monitoring_${data.networkDate}_${data.networkTime.replace(':', '')}.csv`;
-            downloadFile('\uFEFF' + csvContent, filename, 'text/csv;charset=utf-8');
-            showAlert('回線モニタCSVファイルをダウンロードしました', 'success');
-        }
     </script>
 </body>
 </html>
