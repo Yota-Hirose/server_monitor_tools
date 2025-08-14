@@ -4,6 +4,9 @@ on:
   repository_dispatch:
     types: [update-monitoring-data]
 
+permissions:
+  contents: write
+
 jobs:
   update-excel:
     runs-on: ubuntu-latest
@@ -32,4 +35,5 @@ jobs:
         git config --local user.name "GitHub Action"
         git add data/
         git commit -m "監視データ更新: $(date +'%Y-%m-%d %H:%M:%S')" || exit 0
+        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
         git push
