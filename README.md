@@ -5,7 +5,7 @@ Webブラウザから監視データを入力して、自動的にExcelファイ
 ## 🌐 Web版の使用方法（推奨）
 
 ### 1. GitHub Pagesでアクセス
-- **URL**: `https://[ユーザー名].github.io/server_monitor_tools/docs/`
+- **URL**: `https://[あなたのGitHubユーザー名].github.io/server_monitor_tools/docs/`
 - ブラウザで直接監視データを入力できます
 
 ### 2. リポジトリ設定（初回のみ）
