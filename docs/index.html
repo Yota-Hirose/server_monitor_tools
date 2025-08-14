@@ -109,6 +109,7 @@
             display: flex;
             gap: 12px;
             margin-top: 32px;
+            flex-wrap: wrap;
         }
         
         button {
@@ -295,7 +296,8 @@
         
         <!-- タブナビゲーション -->
         <div class="tabs">
-            <button class="tab active" onclick="switchTab('monitoring')">📋 監視記録入力</button>
+            <button class="tab active" onclick="switchTab('monitoring')">📋 スポーツコーダー監視</button>
+            <button class="tab" onclick="switchTab('network')">🌐 回線モニタシステム</button>
             <button class="tab" onclick="switchTab('github')">📤 GitHub送信</button>
             <button class="tab" onclick="switchTab('local')">💾 ローカル保存</button>
         </div>
@@ -436,10 +438,161 @@
                 <textarea id="notes" name="notes" rows="3" placeholder="特記事項があれば入力してください"></textarea>
             </div>
             
-                <!-- 一時保存ボタン -->
+                <!-- データ管理ボタン -->
                 <div class="button-group">
                     <button type="button" class="btn-secondary" onclick="saveToLocal()">
-                        📥 一時保存
+                        📥 GitHub保存
+                    </button>
+                    <button type="button" class="btn-secondary" onclick="loadPreviousData()">
+                        📂 前回データ読込
+                    </button>
+                    <button type="button" class="btn-secondary" onclick="clearSportsCoderForm()">
+                        🗑️ フォームクリア
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- 回線モニタシステムタブ -->
+        <div id="network-tab" class="tab-content">
+            <form id="networkForm">
+            <!-- 基本情報 -->
+            <h2>基本情報</h2>
+            <div class="grid grid-3">
+                <div class="form-group">
+                    <label for="networkDate">確認日</label>
+                    <input type="text" id="networkDate" name="networkDate" placeholder="2022/4/6" required>
+                </div>
+                <div class="form-group">
+                    <label for="networkTime">確認時刻</label>
+                    <input type="time" id="networkTime" name="networkTime" required>
+                </div>
+                <div class="form-group">
+                    <label for="networkChecker">確認者</label>
+                    <input type="text" id="networkChecker" name="networkChecker" placeholder="名前を入力" required>
+                </div>
+            </div>
+            
+            <div class="form-group" style="max-width: 400px;">
+                <label for="networkCheckResult">確認結果</label>
+                <input type="text" id="networkCheckResult" name="networkCheckResult" placeholder="問題なし" value="問題なし">
+            </div>
+            
+            <!-- FTサーバユーティリティ -->
+            <h2>FTサーバユーティリティ</h2>
+            <div class="grid grid-2">
+                <div class="form-group">
+                    <label for="networkCpuPciModule">CPUモジュール、PCIモジュール</label>
+                    <select id="networkCpuPciModule" name="networkCpuPciModule">
+                        <option value="">選択してください</option>
+                        <option value="Duplex">Duplex</option>
+                        <option value="Simplex">Simplex</option>
+                        <option value="Error">Error</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="networkScsiEnclosure">SCSIエンクロージャ</label>
+                    <select id="networkScsiEnclosure" name="networkScsiEnclosure">
+                        <option value="">選択してください</option>
+                        <option value="Online">Online</option>
+                        <option value="Offline">Offline</option>
+                        <option value="Error">Error</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="networkServerTimeSync">サーバ時刻同期</label>
+                <input type="text" id="networkServerTimeSync" name="networkServerTimeSync" placeholder="問題なし" value="問題なし">
+            </div>
+            
+            <!-- HDD残容量 -->
+            <h2>HDD残容量</h2>
+            <div class="grid grid-4">
+                <div class="form-group">
+                    <label for="networkDriveC">C: [GB]</label>
+                    <input type="number" id="networkDriveC" name="networkDriveC" step="0.1" placeholder="50">
+                </div>
+                <div class="form-group">
+                    <label for="networkDriveF">F: [GB]</label>
+                    <input type="number" id="networkDriveF" name="networkDriveF" step="0.1" placeholder="278">
+                </div>
+                <div class="form-group">
+                    <label for="networkDriveE">E: [GB]</label>
+                    <input type="number" id="networkDriveE" name="networkDriveE" step="0.1" placeholder="0">
+                </div>
+                <div class="form-group">
+                    <label for="networkDriveG">G: [GB]</label>
+                    <input type="number" id="networkDriveG" name="networkDriveG" step="0.1" placeholder="0">
+                </div>
+            </div>
+            
+            <!-- タスクマネージャ -->
+            <h2>タスクマネージャ</h2>
+            <div class="grid grid-3">
+                <div class="form-group">
+                    <label for="networkW3wpUsage">w3wp.exeの使用量 [MB]</label>
+                    <input type="number" id="networkW3wpUsage" name="networkW3wpUsage" step="0.1" placeholder="539.6">
+                </div>
+                <div class="form-group">
+                    <label for="networkSqlServerMemory">SQLServer [GB]</label>
+                    <input type="number" id="networkSqlServerMemory" name="networkSqlServerMemory" step="0.01" placeholder="3.90">
+                </div>
+                <div class="form-group">
+                    <label for="networkKaisentest">MSSQL$KAISENTEST [GB]</label>
+                    <input type="number" id="networkKaisentest" name="networkKaisentest" step="0.01" placeholder="0.18">
+                </div>
+                <div class="form-group">
+                    <label for="networkTotalMemoryUsage">全体メモリ使用量 [GB]</label>
+                    <input type="number" id="networkTotalMemoryUsage" name="networkTotalMemoryUsage" step="0.01" placeholder="6.90">
+                </div>
+                <div class="form-group">
+                    <label for="networkCpuUsage">CPU使用率 [%]</label>
+                    <input type="number" id="networkCpuUsage" name="networkCpuUsage" min="0" max="100" placeholder="0">
+                </div>
+                <div class="form-group">
+                    <label for="networkCpuCheckTime">CPU確認時刻</label>
+                    <input type="time" id="networkCpuCheckTime" name="networkCpuCheckTime" placeholder="14:35">
+                </div>
+                <div class="form-group">
+                    <label for="networkKaisenmonitor">MSSQL$KAISENMONITOR</label>
+                    <input type="text" id="networkKaisenmonitor" name="networkKaisenmonitor" placeholder="状況を入力">
+                </div>
+                <div class="form-group">
+                    <label for="networkW3MemoryUsage">メモリ使用量：w3</label>
+                    <input type="text" id="networkW3MemoryUsage" name="networkW3MemoryUsage" placeholder="w3の詳細情報">
+                </div>
+            </div>
+            
+            <!-- FTサーバの全面ランプ -->
+            <h2>FTサーバの全面ランプ</h2>
+            <div class="grid grid-2">
+                <div class="form-group">
+                    <label for="networkUpperLamps">上段サーバランプ点灯数 [個]</label>
+                    <input type="number" id="networkUpperLamps" name="networkUpperLamps" min="0" placeholder="3">
+                </div>
+                <div class="form-group">
+                    <label for="networkLowerLamps">下段サーバランプ点灯数 [個]</label>
+                    <input type="number" id="networkLowerLamps" name="networkLowerLamps" min="0" placeholder="2">
+                </div>
+            </div>
+            
+            <!-- 備考 -->
+            <h2>備考</h2>
+            <div class="form-group">
+                <textarea id="networkNotes" name="networkNotes" rows="3" placeholder="特記事項があれば入力してください"></textarea>
+            </div>
+            
+                <!-- データ管理ボタン -->
+                <div class="button-group">
+                    <button type="button" class="btn-secondary" onclick="saveNetworkToLocal()">
+                        📥 GitHub保存
+                    </button>
+                    <button type="button" class="btn-secondary" onclick="loadPreviousNetworkData()">
+                        📂 前回データ読込
+                    </button>
+                    <button type="button" class="btn-secondary" onclick="clearNetworkForm()">
+                        🗑️ フォームクリア
                     </button>
                 </div>
             </form>
@@ -447,6 +600,20 @@
         
         <!-- GitHub送信タブ -->
         <div id="github-tab" class="tab-content">
+            <div class="config-section">
+                <h2>送信するデータを選択</h2>
+                <div class="form-group">
+                    <label>
+                        <input type="radio" name="dataType" value="sports" checked> 📋 スポーツコーダー監視データ
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="radio" name="dataType" value="network"> 🌐 回線モニタシステムデータ
+                    </label>
+                </div>
+            </div>
+            
             <div class="config-section">
                 <h2>GitHub設定</h2>
                 <div class="form-group">
@@ -464,7 +631,7 @@
                     </div>
                     <div class="form-group">
                         <label for="repoName">リポジトリ名</label>
-                        <input type="text" id="repoName" placeholder="server_monitor_tools">
+                        <input type="text" id="repoName" value="server_monitor_tools" placeholder="server_monitor_tools">
                     </div>
                 </div>
                 
@@ -479,8 +646,8 @@
         <!-- ローカル保存タブ -->
         <div id="local-tab" class="tab-content">
             <div class="config-section">
-                <h2>ローカル保存オプション</h2>
-                <p class="config-info">入力したデータをローカルファイルとして保存できます。</p>
+                <h2>スポーツコーダー監視データ</h2>
+                <p class="config-info">スポーツコーダー監視データをローカルファイルとして保存できます。</p>
                 
                 <div class="button-group">
                     <button type="button" class="btn-excel" onclick="downloadJSON()">
@@ -490,6 +657,21 @@
                         📊 CSVで保存
                     </button>
                 </div>
+            </div>
+            
+            <div class="config-section">
+                <h2>回線モニタシステムデータ</h2>
+                <p class="config-info">回線モニタシステムデータをローカルファイルとして保存できます。</p>
+                
+                <div class="button-group">
+                    <button type="button" class="btn-excel" onclick="downloadNetworkJSON()">
+                        📁 JSONで保存
+                    </button>
+                    <button type="button" class="btn-csv" onclick="downloadNetworkCSV()">
+                        📊 CSVで保存
+                    </button>
+                </div>
+            </div>
                 
                 <div class="config-info" style="margin-top: 20px;">
                     <h3>使用方法:</h3>
@@ -522,8 +704,11 @@
             // SC機CPU/メモリの入力フィールドを生成
             generateSCCpuMemoryInputs();
             
-            // 保存されたデータがあれば読み込む
-            loadSavedData();
+            // 回線モニタシステム用の日時設定
+            document.getElementById('networkDate').value = `${year}/${month}/${day}`;
+            document.getElementById('networkTime').value = now.toTimeString().split(' ')[0].substring(0, 5);
+            
+            // ページロード時は自動読み込みしない（ユーザーが明示的に読み込むように変更）
         });
         
         // SC機の入力フィールドを動的に生成
@@ -566,6 +751,7 @@
             if (token) document.getElementById('githubToken').value = token;
             if (owner) document.getElementById('repoOwner').value = owner;
             if (repo) document.getElementById('repoName').value = repo;
+            // リポジトリ名が保存されていない場合はデフォルト値を維持
         }
         
         function saveConfig() {
@@ -589,6 +775,127 @@
             document.getElementById(tabName + '-tab').classList.add('active');
         }
         
+        // GitHub API共通関数
+        async function saveDataToGitHub(data, dataType, successMessage) {
+            const token = document.getElementById('githubToken').value;
+            const owner = document.getElementById('repoOwner').value;
+            const repo = document.getElementById('repoName').value;
+            
+            if (!token || !owner || !repo) {
+                showAlert('GitHub設定を入力してください', 'error');
+                return false;
+            }
+            
+            showLoading(true);
+            
+            try {
+                const fileName = dataType === 'sports' ? 'previous_sports_data.json' : 'previous_network_data.json';
+                const filePath = `data/${fileName}`;
+                
+                // 現在のファイルのSHAを取得（更新時に必要）
+                let sha = null;
+                try {
+                    const existingResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`, {
+                        headers: {
+                            'Authorization': `token ${token}`,
+                            'Accept': 'application/vnd.github.v3+json'
+                        }
+                    });
+                    if (existingResponse.ok) {
+                        const existingData = await existingResponse.json();
+                        sha = existingData.sha;
+                    }
+                } catch (e) {
+                    // ファイルが存在しない場合は新規作成
+                }
+                
+                // データにタイムスタンプを追加
+                const dataWithTimestamp = {
+                    ...data,
+                    savedAt: new Date().toISOString(),
+                    dataType: dataType
+                };
+                
+                const content = btoa(unescape(encodeURIComponent(JSON.stringify(dataWithTimestamp, null, 2))));
+                
+                const requestBody = {
+                    message: `保存: ${dataType === 'sports' ? 'スポーツコーダー' : '回線モニタ'}データ (${new Date().toLocaleString('ja-JP')})`,
+                    content: content
+                };
+                
+                if (sha) {
+                    requestBody.sha = sha;
+                }
+                
+                const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+                
+                if (response.ok) {
+                    showAlert(successMessage, 'success');
+                    return true;
+                } else {
+                    const error = await response.text();
+                    throw new Error(`保存失敗: ${response.status} - ${error}`);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert(`エラーが発生しました: ${error.message}`, 'error');
+                return false;
+            } finally {
+                showLoading(false);
+            }
+        }
+        
+        async function loadDataFromGitHub(dataType) {
+            const token = document.getElementById('githubToken').value;
+            const owner = document.getElementById('repoOwner').value;
+            const repo = document.getElementById('repoName').value;
+            
+            if (!token || !owner || !repo) {
+                showAlert('GitHub設定を入力してください', 'error');
+                return null;
+            }
+            
+            showLoading(true);
+            
+            try {
+                const fileName = dataType === 'sports' ? 'previous_sports_data.json' : 'previous_network_data.json';
+                const filePath = `data/${fileName}`;
+                
+                const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`, {
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+                
+                if (response.ok) {
+                    const fileData = await response.json();
+                    const content = decodeURIComponent(escape(atob(fileData.content)));
+                    return JSON.parse(content);
+                } else if (response.status === 404) {
+                    showAlert('保存されたデータが見つかりません', 'info');
+                    return null;
+                } else {
+                    const error = await response.text();
+                    throw new Error(`読み込み失敗: ${response.status} - ${error}`);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert(`エラーが発生しました: ${error.message}`, 'error');
+                return null;
+            } finally {
+                showLoading(false);
+            }
+        }
+        
         // GitHub送信機能
         async function submitToGitHub() {
             // 設定を保存
@@ -604,12 +911,38 @@
                 return;
             }
             
+            // データタイプを確認
+            const dataType = document.querySelector('input[name="dataType"]:checked').value;
+            
             showLoading(true);
             
             try {
-                // フォームデータを収集
-                const formData = new FormData(document.getElementById('monitoringForm'));
-                const data = Object.fromEntries(formData.entries());
+                let formData;
+                let data;
+                
+                if (dataType === 'network') {
+                    // 回線モニタシステムデータ
+                    formData = new FormData(document.getElementById('networkForm'));
+                    data = Object.fromEntries(formData.entries());
+                    
+                    // 必須項目チェック
+                    if (!data.networkDate || !data.networkTime || !data.networkChecker) {
+                        showAlert('回線モニタの基本情報（確認日、確認時刻、確認者）を入力してください', 'error');
+                        showLoading(false);
+                        return;
+                    }
+                } else {
+                    // スポーツコーダー監視データ
+                    formData = new FormData(document.getElementById('monitoringForm'));
+                    data = Object.fromEntries(formData.entries());
+                    
+                    // 必須項目チェック
+                    if (!data.date || !data.time || !data.checker) {
+                        showAlert('スポーツコーダーの基本情報（確認日、確認時刻、確認者）を入力してください', 'error');
+                        showLoading(false);
+                        return;
+                    }
+                }
                 
                 // GitHub APIでワークフローをトリガー（repository_dispatch）
                 const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/dispatches`, {
@@ -628,15 +961,43 @@
                 });
                 
                 if (response.ok) {
-                    showAlert('データを送信しました！GitHub Actionsで処理中です。', 'success');
-                    // 送信成功したらローカルストレージをクリア
-                    localStorage.removeItem('monitoringData');
-                    // フォームをリセット（日時と確認者以外）
-                    const currentChecker = document.getElementById('checker').value;
-                    document.getElementById('monitoringForm').reset();
-                    document.getElementById('date').value = new Date().toISOString().split('T')[0];
-                    document.getElementById('time').value = new Date().toTimeString().split(' ')[0].substring(0, 5);
-                    document.getElementById('checker').value = currentChecker;
+                    showAlert(`${dataType === 'network' ? '回線モニタ' : 'スポーツコーダー'}データを送信しました！GitHub Actionsで処理中です。`, 'success');
+                    
+                    // 送信成功時に自動でデータも保存
+                    await saveDataToGitHub(data, dataType, '');
+                    
+                    if (dataType === 'network') {
+                        // 回線モニタの送信成功処理
+                        const currentChecker = document.getElementById('networkChecker').value;
+                        document.getElementById('networkForm').reset();
+                        const now = new Date();
+                        const year = now.getFullYear();
+                        const month = now.getMonth() + 1;
+                        const day = now.getDate();
+                        document.getElementById('networkDate').value = `${year}/${month}/${day}`;
+                        document.getElementById('networkTime').value = now.toTimeString().split(' ')[0].substring(0, 5);
+                        document.getElementById('networkChecker').value = currentChecker;
+                        
+                        // デフォルト値を再設定
+                        document.getElementById('networkCheckResult').value = '問題なし';
+                        document.getElementById('networkServerTimeSync').value = '問題なし';
+                    } else {
+                        // スポーツコーダーの送信成功処理
+                        const currentChecker = document.getElementById('checker').value;
+                        document.getElementById('monitoringForm').reset();
+                        const now = new Date();
+                        const year = now.getFullYear();
+                        const month = now.getMonth() + 1;
+                        const day = now.getDate();
+                        document.getElementById('date').value = `${year}/${month}/${day}`;
+                        document.getElementById('time').value = now.toTimeString().split(' ')[0].substring(0, 5);
+                        document.getElementById('checker').value = currentChecker;
+                        
+                        // デフォルト値を再設定
+                        document.getElementById('checkResult').value = '問題なし';
+                        document.getElementById('serverTimeSync').value = '問題なし';
+                        document.getElementById('memoryUsageStatus').value = '問題なし';
+                    }
                 } else {
                     const error = await response.text();
                     throw new Error(`送信失敗: ${response.status} - ${error}`);
@@ -769,26 +1130,201 @@
             document.getElementById('loading').style.display = show ? 'flex' : 'none';
         }
         
-        // ローカルストレージに保存
-        function saveToLocal() {
+        // GitHub上にデータを保存
+        async function saveToLocal() {
             const formData = new FormData(document.getElementById('monitoringForm'));
             const data = Object.fromEntries(formData.entries());
             
-            localStorage.setItem('monitoringData', JSON.stringify(data));
-            showAlert('データを一時保存しました', 'success');
+            // 必須項目チェック
+            if (!data.date || !data.time || !data.checker) {
+                showAlert('基本情報（確認日、確認時刻、確認者）を入力してください', 'error');
+                return;
+            }
+            
+            await saveDataToGitHub(data, 'sports', 'スポーツコーダーデータを保存しました');
         }
         
-        // 保存データの読み込み
-        function loadSavedData() {
-            const saved = localStorage.getItem('monitoringData');
-            if (saved) {
-                const data = JSON.parse(saved);
+        // 旧コード削除: ローカルストレージは使用しなくなりました
+        
+        // 前回データ読み込み（ユーザー操作用）
+        async function loadPreviousData() {
+            const data = await loadDataFromGitHub('sports');
+            if (data) {
+                let loadedCount = 0;
+                
                 Object.keys(data).forEach(key => {
                     const element = document.querySelector(`[name="${key}"]`);
-                    if (element) element.value = data[key];
+                    if (element && data[key] && key !== 'savedAt' && key !== 'dataType') {
+                        element.value = data[key];
+                        loadedCount++;
+                    }
                 });
-                showAlert('前回の一時保存データを読み込みました', 'info');
+                
+                if (loadedCount > 0) {
+                    const saveDate = data.savedAt ? new Date(data.savedAt).toLocaleString('ja-JP') : '不明';
+                    showAlert(`スポーツコーダーの前回データを読み込みました（${loadedCount}項目、保存日時: ${saveDate}）`, 'success');
+                } else {
+                    showAlert('読み込めるデータがありませんでした', 'info');
+                }
             }
+        }
+        
+        // スポーツコーダーフォームクリア
+        function clearSportsCoderForm() {
+            // 現在の日時と確認者以外をクリア
+            const currentChecker = document.getElementById('checker').value;
+            document.getElementById('monitoringForm').reset();
+            
+            // 日時を再設定
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth() + 1;
+            const day = now.getDate();
+            document.getElementById('date').value = `${year}/${month}/${day}`;
+            document.getElementById('time').value = now.toTimeString().split(' ')[0].substring(0, 5);
+            document.getElementById('checker').value = currentChecker;
+            
+            // デフォルト値を再設定
+            document.getElementById('checkResult').value = '問題なし';
+            document.getElementById('serverTimeSync').value = '問題なし';
+            document.getElementById('memoryUsageStatus').value = '問題なし';
+            
+            showAlert('スポーツコーダーフォームをクリアしました', 'success');
+        }
+        
+        // 回線モニタ用: GitHub上にデータを保存
+        async function saveNetworkToLocal() {
+            const formData = new FormData(document.getElementById('networkForm'));
+            const data = Object.fromEntries(formData.entries());
+            
+            // 必須項目チェック
+            if (!data.networkDate || !data.networkTime || !data.networkChecker) {
+                showAlert('基本情報（確認日、確認時刻、確認者）を入力してください', 'error');
+                return;
+            }
+            
+            await saveDataToGitHub(data, 'network', '回線モニタデータを保存しました');
+        }
+        
+        // 旧コード削除: ローカルストレージは使用しなくなりました（回線モニタ用）
+        
+        // 回線モニタ用: 前回データ読み込み（ユーザー操作用）
+        async function loadPreviousNetworkData() {
+            const data = await loadDataFromGitHub('network');
+            if (data) {
+                let loadedCount = 0;
+                
+                Object.keys(data).forEach(key => {
+                    const element = document.querySelector(`#networkForm [name="${key}"]`);
+                    if (element && data[key] && key !== 'savedAt' && key !== 'dataType') {
+                        element.value = data[key];
+                        loadedCount++;
+                    }
+                });
+                
+                if (loadedCount > 0) {
+                    const saveDate = data.savedAt ? new Date(data.savedAt).toLocaleString('ja-JP') : '不明';
+                    showAlert(`回線モニタの前回データを読み込みました（${loadedCount}項目、保存日時: ${saveDate}）`, 'success');
+                } else {
+                    showAlert('読み込めるデータがありませんでした', 'info');
+                }
+            }
+        }
+        
+        // 回線モニタフォームクリア
+        function clearNetworkForm() {
+            // 現在の日時と確認者以外をクリア
+            const currentChecker = document.getElementById('networkChecker').value;
+            document.getElementById('networkForm').reset();
+            
+            // 日時を再設定
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth() + 1;
+            const day = now.getDate();
+            document.getElementById('networkDate').value = `${year}/${month}/${day}`;
+            document.getElementById('networkTime').value = now.toTimeString().split(' ')[0].substring(0, 5);
+            document.getElementById('networkChecker').value = currentChecker;
+            
+            // デフォルト値を再設定
+            document.getElementById('networkCheckResult').value = '問題なし';
+            document.getElementById('networkServerTimeSync').value = '問題なし';
+            
+            showAlert('回線モニタフォームをクリアしました', 'success');
+        }
+        
+        // 回線モニタ用: JSONファイルとしてダウンロード
+        function downloadNetworkJSON() {
+            const formData = new FormData(document.getElementById('networkForm'));
+            const data = Object.fromEntries(formData.entries());
+            
+            // 必須項目チェック
+            if (!data.networkDate || !data.networkTime || !data.networkChecker) {
+                showAlert('基本情報（確認日、確認時刻、確認者）を入力してください', 'error');
+                return;
+            }
+            
+            const jsonContent = JSON.stringify(data, null, 2);
+            const filename = `network_monitoring_${data.networkDate}_${data.networkTime.replace(':', '')}.json`;
+            
+            downloadFile(jsonContent, filename, 'application/json');
+            showAlert('回線モニタJSONファイルをダウンロードしました', 'success');
+        }
+        
+        // 回線モニタ用: CSVファイルとしてダウンロード
+        function downloadNetworkCSV() {
+            const formData = new FormData(document.getElementById('networkForm'));
+            const data = Object.fromEntries(formData.entries());
+            
+            // 必須項目チェック
+            if (!data.networkDate || !data.networkTime || !data.networkChecker) {
+                showAlert('基本情報（確認日、確認時刻、確認者）を入力してください', 'error');
+                return;
+            }
+            
+            // CSVヘッダー
+            const csvHeaders = [
+                '確認日', '確認者', '確認結果', 'CPUモジュール', 'SCSIエンクロージャ', 'サーバ時刻同期',
+                'C:ドライブ[GB]', 'F:ドライブ[GB]', 'E:ドライブ[GB]', 'G:ドライブ[GB]',
+                'w3wp.exe使用量[MB]', 'SQLServer[GB]', 'MSSQL$KAISENTEST[GB]', '全体メモリ使用量[GB]',
+                'CPU使用率[%]', 'CPU確認時刻', 'MSSQL$KAISENMONITOR', 'メモリ使用量:w3',
+                '上段ランプ[個]', '下段ランプ[個]', '備考'
+            ];
+            
+            // CSVデータ行
+            const csvRow = [
+                data.networkDate || '',
+                data.networkChecker || '',
+                data.networkCheckResult || '',
+                data.networkCpuPciModule || '',
+                data.networkScsiEnclosure || '',
+                data.networkServerTimeSync || '',
+                data.networkDriveC || '',
+                data.networkDriveF || '',
+                data.networkDriveE || '',
+                data.networkDriveG || '',
+                data.networkW3wpUsage || '',
+                data.networkSqlServerMemory || '',
+                data.networkKaisentest || '',
+                data.networkTotalMemoryUsage || '',
+                data.networkCpuUsage || '',
+                data.networkCpuCheckTime || '',
+                data.networkKaisenmonitor || '',
+                data.networkW3MemoryUsage || '',
+                data.networkUpperLamps || '',
+                data.networkLowerLamps || '',
+                data.networkNotes || ''
+            ];
+            
+            // CSV形式に変換
+            const csvContent = [
+                csvHeaders.join(','),
+                csvRow.map(field => `"${field}"`).join(',')
+            ].join('\n');
+            
+            const filename = `network_monitoring_${data.networkDate}_${data.networkTime.replace(':', '')}.csv`;
+            downloadFile('\uFEFF' + csvContent, filename, 'text/csv;charset=utf-8');
+            showAlert('回線モニタCSVファイルをダウンロードしました', 'success');
         }
     </script>
 </body>

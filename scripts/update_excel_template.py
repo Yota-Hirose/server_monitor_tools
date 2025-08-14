@@ -34,6 +34,21 @@ def update_excel_template(json_data):
     # JSONデータをパース
     data = json.loads(json_data)
     
+    # データタイプを判定（回線モニタかスポーツコーダーか）
+    if is_network_monitoring_data(data):
+        return update_network_monitoring_excel(data)
+    else:
+        return update_sports_coder_excel(data)
+
+def is_network_monitoring_data(data):
+    """回線モニタシステムのデータかどうか判定"""
+    # 回線モニタ特有のフィールドをチェック
+    network_fields = ['networkDate', 'networkChecker', 'networkDriveF', 'networkW3wpUsage', 'networkKaisentest']
+    return any(field in data for field in network_fields)
+
+def update_sports_coder_excel(data):
+    """スポーツコーダー監視のExcelを更新"""
+    
     # Excelファイルのパス（GitHub Actions用）
     excel_path = 'data/スポーツコーダ監視作業履歴.xlsx'
     
@@ -304,6 +319,157 @@ def update_sc_cpu_memory(ws, data):
                 if sc_memory:
                     safe_set_cell_value(ws, target_row, 21, float(sc_memory))
                     print(f"Updated SC-{i} Memory (U{target_row}): {sc_memory}GB")
+
+def update_network_monitoring_excel(data):
+    """回線モニタシステムのExcelを更新"""
+    
+    # Excelファイルのパス（GitHub Actions用）
+    excel_path = 'data/回線モニタシステム[R320e-E4]HW監視作業履歴.xlsx'
+    
+    if not os.path.exists(excel_path):
+        print(f"Error: Network monitoring Excel file not found: {excel_path}")
+        return False
+    
+    try:
+        # 既存のファイルを開く
+        wb = openpyxl.load_workbook(excel_path)
+        
+        # 最初のシート（現在のシート）を使用
+        ws = wb.worksheets[0]
+        sheet_name = ws.title
+        print(f"Updating network monitoring sheet: {sheet_name}")
+        
+        # 最終更新日時を更新 (適切な位置)
+        safe_set_cell_value(ws, 2, 5, '最終更新日時')
+        safe_set_cell_value(ws, 2, 26, datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+        
+        # 基本情報を更新
+        # 確認日（B5）- 時刻は含めない
+        date_str = data.get('networkDate', '')
+        if date_str:
+            # 日付のみを設定（時刻は除去）
+            check_date = date_str.split(' ')[0]  # スペースがあれば最初の部分（日付部分）のみ
+            safe_set_cell_value(ws, 5, 2, check_date)
+            print(f"Updated 確認日 (B5): {check_date}")
+        
+        # 確認者 (C5)
+        if data.get('networkChecker'):
+            safe_set_cell_value(ws, 5, 3, data.get('networkChecker'))
+            print(f"Updated 確認者 (C5): {data.get('networkChecker')}")
+        
+        # 確認結果 (D5)
+        check_result = data.get('networkCheckResult')
+        if check_result:
+            safe_set_cell_value(ws, 5, 4, check_result)
+            print(f"Updated 確認結果 (D5): {check_result}")
+        
+        # 確認内容の項目は削除済み
+        
+        # FTサーバユーティリティ
+        # CPU/PCIモジュール (列6)
+        if data.get('networkCpuPciModule'):
+            safe_set_cell_value(ws, 6, 6, data.get('networkCpuPciModule'))
+            print(f"Updated CPU/PCIモジュール (F6): {data.get('networkCpuPciModule')}")
+        
+        # SCSIエンクロージャ (列6)
+        if data.get('networkScsiEnclosure'):
+            safe_set_cell_value(ws, 7, 6, data.get('networkScsiEnclosure'))
+            print(f"Updated SCSIエンクロージャ (F7): {data.get('networkScsiEnclosure')}")
+        
+        # サーバ時刻同期 (列10)
+        if data.get('networkServerTimeSync'):
+            safe_set_cell_value(ws, 9, 10, data.get('networkServerTimeSync'))
+            print(f"Updated サーバ時刻同期 (J9): {data.get('networkServerTimeSync')}")
+        
+        # HDD残容量
+        # Cドライブ (列7)
+        if data.get('networkDriveC'):
+            safe_set_cell_value(ws, 12, 7, float(data.get('networkDriveC')))
+            print(f"Updated C:ドライブ (G12): {data.get('networkDriveC')}GB")
+        
+        # Fドライブ (列7)
+        if data.get('networkDriveF'):
+            safe_set_cell_value(ws, 13, 7, float(data.get('networkDriveF')))
+            print(f"Updated F:ドライブ (G13): {data.get('networkDriveF')}GB")
+        
+        # Eドライブ (列7) - 適切な行に配置
+        if data.get('networkDriveE'):
+            safe_set_cell_value(ws, 14, 7, float(data.get('networkDriveE')))
+            print(f"Updated E:ドライブ (G14): {data.get('networkDriveE')}GB")
+        
+        # Gドライブ (列7) - 適切な行に配置
+        if data.get('networkDriveG'):
+            safe_set_cell_value(ws, 15, 7, float(data.get('networkDriveG')))
+            print(f"Updated G:ドライブ (G15): {data.get('networkDriveG')}GB")
+        
+        # タスクマネージャ - 詳細項目
+        # w3wp.exeの使用量 [MB] (列10)
+        if data.get('networkW3wpUsage'):
+            safe_set_cell_value(ws, 16, 10, float(data.get('networkW3wpUsage')))
+            print(f"Updated w3wp.exeの使用量 (J16): {data.get('networkW3wpUsage')}MB")
+        
+        # SQLServer [GB] (列10)
+        if data.get('networkSqlServerMemory'):
+            safe_set_cell_value(ws, 17, 10, float(data.get('networkSqlServerMemory')))
+            print(f"Updated SQLServer (J17): {data.get('networkSqlServerMemory')}GB")
+        
+        # MSSQL$KAISENTEST [GB] (列10)
+        if data.get('networkKaisentest'):
+            safe_set_cell_value(ws, 18, 10, float(data.get('networkKaisentest')))
+            print(f"Updated MSSQL$KAISENTEST (J18): {data.get('networkKaisentest')}GB")
+        
+        # 全体メモリ使用量 [GB] (列10)
+        if data.get('networkTotalMemoryUsage'):
+            safe_set_cell_value(ws, 20, 10, float(data.get('networkTotalMemoryUsage')))
+            print(f"Updated 全体メモリ使用量 (J20): {data.get('networkTotalMemoryUsage')}GB")
+        
+        # CPU使用率 [%] (列6)
+        if data.get('networkCpuUsage'):
+            safe_set_cell_value(ws, 21, 6, float(data.get('networkCpuUsage')))
+            print(f"Updated CPU使用率 (F21): {data.get('networkCpuUsage')}%")
+        
+        # CPU確認時刻 (列16)
+        if data.get('networkCpuCheckTime'):
+            safe_set_cell_value(ws, 21, 16, data.get('networkCpuCheckTime'))
+            print(f"Updated CPU確認時刻 (P21): {data.get('networkCpuCheckTime')}")
+        
+        # MSSQL$KAISENMONITOR (列10)
+        if data.get('networkKaisenmonitor'):
+            safe_set_cell_value(ws, 22, 10, data.get('networkKaisenmonitor'))
+            print(f"Updated MSSQL$KAISENMONITOR (J22): {data.get('networkKaisenmonitor')}")
+        
+        # メモリ使用量：w3 (列10)
+        if data.get('networkW3MemoryUsage'):
+            safe_set_cell_value(ws, 23, 10, data.get('networkW3MemoryUsage'))
+            print(f"Updated メモリ使用量：w3 (J23): {data.get('networkW3MemoryUsage')}")
+        
+        # FTサーバの全面ランプ
+        # 上段サーバランプ点灯数 (列6)
+        if data.get('networkUpperLamps'):
+            safe_set_cell_value(ws, 24, 6, int(data.get('networkUpperLamps')))
+            print(f"Updated 上段サーバランプ (F24): {data.get('networkUpperLamps')}個")
+        
+        # 下段サーバランプ点灯数 (列6)
+        if data.get('networkLowerLamps'):
+            safe_set_cell_value(ws, 25, 6, int(data.get('networkLowerLamps')))
+            print(f"Updated 下段サーバランプ (F25): {data.get('networkLowerLamps')}個")
+        
+        # 備考
+        if data.get('networkNotes'):
+            # 適切な位置に備考を設定（回線モニタ用）
+            safe_set_cell_value(ws, 5, 26, data.get('networkNotes'))
+            print(f"Updated 備考 (Z5): {data.get('networkNotes')}")
+        
+        # ファイルを保存
+        wb.save(excel_path)
+        print(f"✓ Network monitoring Excel updated successfully: {excel_path}")
+        print(f"Updated cells: 基本情報, FTサーバー, HDD容量, タスクマネージャ, サーバーランプ")
+        
+        return True
+        
+    except Exception as e:
+        print(f"Error updating network monitoring Excel: {e}")
+        return False
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
