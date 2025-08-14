@@ -413,10 +413,10 @@ def update_network_monitoring_excel(data):
             safe_set_cell_value(ws, 20, 16, float(data.get('networkTotalMemoryUsage')))
             print(f"Updated 全体メモリ使用量 (P20): {data.get('networkTotalMemoryUsage')}GB")
         
-        # CPU使用率 [%] (N21)
+        # CPU使用率 [%] (J21)
         if data.get('networkCpuUsage'):
-            safe_set_cell_value(ws, 21, 14, float(data.get('networkCpuUsage')))
-            print(f"Updated CPU使用率 (N21): {data.get('networkCpuUsage')}%")
+            safe_set_cell_value(ws, 21, 10, float(data.get('networkCpuUsage')))
+            print(f"Updated CPU使用率 (J21): {data.get('networkCpuUsage')}%")
         
         # CPU確認時刻 (P21)
         if data.get('networkCpuCheckTime'):

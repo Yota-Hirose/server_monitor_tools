@@ -962,39 +962,6 @@
                     
                     // 送信成功時に自動でデータも保存
                     await saveDataToGitHub(data, dataType, '');
-                    
-                    if (dataType === 'network') {
-                        // 回線モニタの送信成功処理
-                        const currentChecker = document.getElementById('networkChecker').value;
-                        document.getElementById('networkForm').reset();
-                        const now = new Date();
-                        const year = now.getFullYear();
-                        const month = now.getMonth() + 1;
-                        const day = now.getDate();
-                        document.getElementById('networkDate').value = `${year}/${month}/${day}`;
-                        document.getElementById('networkTime').value = now.toTimeString().split(' ')[0].substring(0, 5);
-                        document.getElementById('networkChecker').value = currentChecker;
-                        
-                        // デフォルト値を再設定
-                        document.getElementById('networkCheckResult').value = '問題なし';
-                        document.getElementById('networkServerTimeSync').value = '問題なし';
-                    } else {
-                        // スポーツコーダーの送信成功処理
-                        const currentChecker = document.getElementById('checker').value;
-                        document.getElementById('monitoringForm').reset();
-                        const now = new Date();
-                        const year = now.getFullYear();
-                        const month = now.getMonth() + 1;
-                        const day = now.getDate();
-                        document.getElementById('date').value = `${year}/${month}/${day}`;
-                        document.getElementById('time').value = now.toTimeString().split(' ')[0].substring(0, 5);
-                        document.getElementById('checker').value = currentChecker;
-                        
-                        // デフォルト値を再設定
-                        document.getElementById('checkResult').value = '問題なし';
-                        document.getElementById('serverTimeSync').value = '問題なし';
-                        document.getElementById('memoryUsageStatus').value = '問題なし';
-                    }
                 } else {
                     const error = await response.text();
                     throw new Error(`送信失敗: ${response.status} - ${error}`);
