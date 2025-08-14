@@ -11,16 +11,14 @@
   "networkDriveE": "43",
   "networkDriveG": "44",
   "networkW3wpUsage": "555",
-  "networkSqlServerMemory": "",
-  "networkKaisentest": "2",
   "networkTotalMemoryUsage": "1",
   "networkCpuUsage": "3",
   "networkCpuCheckTime": "17:14",
   "networkKaisenmonitor": "3333",
-  "networkW3MemoryUsage": "",
+  "networkKaisentest": "2",
   "networkUpperLamps": "2",
   "networkLowerLamps": "4",
   "networkNotes": "hoge",
-  "savedAt": "2025-08-14T04:13:10.178Z",
+  "savedAt": "2025-08-14T04:23:52.666Z",
   "dataType": "network"
 }
