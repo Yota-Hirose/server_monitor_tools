@@ -33,6 +33,10 @@ jobs:
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
+        
+        # 日本時刻を取得
+        JAPAN_TIME=$(TZ='Asia/Tokyo' date +'%Y/%m/%d %H:%M:%S')
+        
         git add data/
         
         # データタイプを判定してコミットメッセージを作成
@@ -46,8 +50,11 @@ jobs:
           CHECK_DATE=$(echo '${{ github.event.client_payload.data }}' | jq -r '.date // "不明"')
         fi
         
-        COMMIT_MSG="📊 ${SYSTEM_TYPE}データ更新 [${CHECK_DATE}] by ${CHECKER}"
+        COMMIT_MSG="📊 ${SYSTEM_TYPE}データ更新 [${CHECK_DATE}] by ${CHECKER} - ${JAPAN_TIME}"
         
         git commit -m "${COMMIT_MSG}" || exit 0
         git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+        
+        # 競合回避のためpull してからpush
+        git pull --rebase origin main || true
         git push
